@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agha's Special Day</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #ffdce5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100vw;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            overflow:hidden;
+            position: relative;
+        } .card {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+        /* Flower rain falling animation background */
+        .flower {
+            position: absolute;
+            top: -20px;
+            pointer-events: none;
+            animation: fall linear infinite;
+            z-index: 10;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+
+        .app-container {
+            width: 95%;
+            max-width: 430px;
+            height: 90vh;
+            max-height: 750px;
+            background: #fff0f3;
+            border-radius: 32px;
+            padding: 25px 20px;
+            box-shadow: 0 15px 40px rgba(244, 143, 177, 0.3);
+            border: 4px solid #ffb3c6;
+            text-align: center;
+            position: relative;
+            display: flex;       
+        flex-direction: column;
+            justify-content:center;
+            gap:15px;
+            align-items: center;
+            overflow-y:auto; 
+        }
+
+        /* --- SCREEN CHANGER --- */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- HEART SHAPE FRAME --- */
+        .heart-cat-frame {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 5px;
+            position: relative;
+            background: white;
+            border-radius: 50%;
+            border: 4px dashed #ff4d6d;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .heart-cat-frame svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- PASSCODE SCREEN --- */
+        .title-text {
+            color: #c9184a;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .dots-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .dot-indicator {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ff85a1;
+            border-radius: 50%;
+            background: transparent;
+            transition: all 0.15s ease;
+        }
+        .dot-indicator.active {
+            background-color: #ff4d6d;
+            border-color: #ff4d6d;
+            transform: scale(1.2);
+        }
+        .custom-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            max-width: 240px;
+            width: 100%;
+        }
+        .key-btn {
+            width: 62px;
+            height: 62px;
+            border: none;
+            border-radius: 50%;
+            background: #fff;
+            color: #ff4d6d;
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(255, 77, 109, 0.1);
+            transition: all 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+            .key-btn:hover {
+    background-color: #ffe6eb;
+    transform: scale(1.05);
+      }
+        .key-btn:active {
+            background: #ff4d6d;
+            color: #fff;
+            transform: scale(0.9);
+        }
+
+        /* --- EMBEDDED CUTE ANIMATED SVGS --- */
+        .svg-container {
+            width: 160px;
+            height: 160px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .svg-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .typing-text-box {
+            color: #c9184a;
+            font-size: 21px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            min-height: 60px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            white-space: pre-wrap;
+        }
+        .typing-text-box::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } 
+        .action-btn {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+            transition: transform 0.1s ease;
+        }
+        .action-btn:active { transform: scale(0.95); }
+
+        /* --- BALLOONS INTERACTION SCREEN --- */
+        .balloons-area {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            width: 100%;
+            height: 200px;
+            margin-bottom: 30px;
+        }
+        .balloon {
+            width: 50px;
+            height: 65px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            position: relative;
+            cursor: pointer;
+            animation: floatUp 3s ease-in-out infinite alternate;
+            transition: transform 0.1s ease;
+        }
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: calc(50% - 2px);
+            width: 4px;
+            height: 12px;
+            background: #ffb3c6;
+        }
+        .balloon-1 { background: #ff4d6d; animation-delay: 0s; }
+        .balloon-2 { background: #ff758f; animation-delay: 0.5s; }
+        .balloon-3 { background: #ff85a1; animation-delay: 0.2s; }
+        .balloon-4 { background: #fca311; animation-delay: 0.7s; }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-3deg); }
+            100% { transform: translateY(-15px) rotate(3deg); }
+        }
+        .balloon.popped {
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+        }
+        .pop-text-display {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff4d6d;
+            min-height: 40px;
+            margin-bottom: 20px;
+            transform: scale(0.5);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .pop-text-display.active {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+          .regards-text {
+    text-align: center;
+    font-size: 20px;
+    color: #ff4d6d;
+    font-weight: bold;
+    margin-top: 15px;
+    animation: jump-shine 2s ease-in-out infinite, zoom-out 2s forwards 3s;
+}
+
+@keyframes jump-shine {
+    0%, 100% { transform: translateY(0); text-shadow: none; }
+    50% { transform: translateY(-10px); text-shadow: 0 0 10px #ff4d6d; }
+}
+
+@keyframes zoom-out {
+    100% { transform: scale(2); opacity: 0; }
+}
+
+        /* --- VINTAGE KHAKI ENVELOPE DESIGN --- */
+        .envelope-container {
+            position: relative;
+            width: 290px;
+            height: 200px;
+            margin: 10px auto;
+            perspective: 1000px;
+        }
+        .envelope-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #d7ccc8; /* Vintage Khaki Clr */
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            cursor: pointer;
+            z-index: 2;
+        }
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 145px solid transparent;
+            border-right: 145px solid transparent;
+            border-top: 110px solid #bcaaa4;
+            transform-origin: top;
+            transition: transform 0.6s ease, z-index 0.3s ease;
+            z-index: 6;
+        }
+        .envelope-wrapper::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 145px solid #efe5fd;
+            border-right: 145px solid #efe5fd;
+            border-bottom: 100px solid #efe5fd;
+            z-index: 4;
+            border-radius: 0 0 12px 12px;
+            opacity: 0.2;
+        }
+        .envelope-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 145px solid #a1887f;
+            border-right: 145px solid #a1887f;
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid #a1887f;
+            z-index: 5;
+            border-radius: 0 0 12px 12px;
+        }
+        .wax-seal {
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            background: radial-gradient(#be1528, #7d0915);
+            border-radius: 50%;
+            top: 85px;
+            left: calc(50% - 26px);
+            z-index: 8;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.5s ease, opacity 0.4s ease;
+        }
+        .wax-seal::after {
+            content: '❤️';
+            font-size: 20px;
+        }
+
+        /* Letter Card */
+        .letter-card {
+            position: absolute;
+            width: 90%;
+            height: 180px;
+            background: #fdfaf2; /* Parchment/old paper paper */
+            left: 5%;
+            top: 5px;
+            z-index: 1;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), height 0.7s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            border: 2px solid #d7ccc8;
+            padding: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .letter-content {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.4s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .envelope-container.opened .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        .envelope-container.opened .wax-seal {
+            transform: translateY(70px) scale(0.8);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .envelope-container.opened .letter-card {
+            transform: translateY(-240px);
+            height: 480px;
+            z-index: 7;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .envelope-container.opened .letter-content { opacity: 1; }
+
+        .env-instruction {
+            font-size: 15px;
+            color: #a71e45;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* --- INTERACTIVE SCROLL NOVELTY --- */
+        .scroll-intro-title {
+            font-family: 'Georgia', serif;
+            font-size: 18px;
+            color: #8d6e63;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #d7ccc8;
+            padding-bottom: 5px;
+            width: 100%;
+        }
+        .wish-display-box {
+            background: #fbf5e6;
+            border-radius: 15px;
+            padding: 20px 15px;
+            text-align: center;
+            border: 1px solid #d7ccc8;
+            box-shadow: inset 0 0 10px rgba(141, 110, 99, 0.05);
+            min-height: 180px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .wish-text {
+            color: #4e342e;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 600;
+            font-style: italic;
+            animation: fadeInWish 0.5s ease-in-out;
+        }
+        @keyframes fadeInWish {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .letter-btn-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        .letter-nav-btn {
+            background: #8d6e63;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .letter-nav-btn:hover {
+            background: #70554c;
+                              
+        .poetry-box {
+            margin: 20px 0;
+            padding: 0 10px;
+        }
+        .poetry-arabic {
+            font-family: 'Amiri', serif, 'Times New Roman';
+            font-size: 25px;
+            color: #c9184a;
+            font-weight: 700;
+            direction: rtl;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .poetry-urdu {
+            font-size: 20px;
+            color: #590d22;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        /* --- THE END SCREEN --- */
+        .end-heading {
+            color: #ff4d6d;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        .potato-text {
+            color: #c9184a;
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="flower-container"></div>
+
+<div class="app-container">
+
+    <div id="screen-passcode" class="screen active">
+        <div class="heart-cat-frame">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="46" fill="#fff5f6"/>
+                <ellipse cx="50" cy="55" rx="32" ry="26" fill="#fcf8f2"/>
+                <path d="M22 38 C20 22, 38 28, 38 38 Z" fill="#fcf8f2"/>
+                <path d="M25 36 C24 26, 35 30, 35 36 Z" fill="#ffccd5"/>
+                <path d="M78 38 C80 22, 62 28, 62 38 Z" fill="#fcf8f2"/>
+                <path d="M75 36 C76 26, 65 30, 65 36 Z" fill="#ffccd5"/>
+                <circle cx="38" cy="52" r="4.5" fill="#2d221e"/>
+                <circle cx="37" cy="50" r="1.5" fill="#ffffff"/>
+                <circle cx="62" cy="52" r="4.5" fill="#2d221e"/>
+                <circle cx="61" cy="50" r="1.5" fill="#ffffff"/>
+                <ellipse cx="32" cy="58" rx="5" ry="3" fill="#ffb3c1" opacity="0.8"/>
+                <ellipse cx="68" cy="58" rx="5" ry="3" fill="#ffb3c1" opacity="0.8"/>
+                <path d="M47 57 Q49 59 50 57 Q51 59 53 57" stroke="#2d221e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                <line x1="22" y1="56" x2="14" y2="55" stroke="#ccc" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="23" y1="60" x2="15" y2="61" stroke="#ccc" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="78" y1="56" x2="86" y2="55" stroke="#ccc" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="77" y1="60" x2="85" y2="61" stroke="#ccc" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M44 26 C44 22, 56 22, 56 26 Z" fill="#ff4d6d"/>
+                <circle cx="50" cy="24" r="4" fill="#ffb3c6"/>
+                <circle cx="44" cy="26" r="3" fill="#ffb3c6"/>
+                <circle cx="56" cy="26" r="3" fill="#ffb3c6"/>
+                <path d="M50 8 L51 11 L54 11 L52 13 L53 16 L50 14 L47 16 L48 13 L46 11 L49 11 Z" fill="#ffd166"/>
+            </svg>
+        </div>
+        <div class="title-text">Enter a passcode</div>
+        <div class="dots-row">
+            <div class="dot-indicator" id="dot-0"></div>
+            <div class="dot-indicator" id="dot-1"></div>
+            <div class="dot-indicator" id="dot-2"></div>
+            <div class="dot-indicator" id="dot-3"></div>
+        </div>
+        <div class="custom-keypad">
+            <button class="key-btn" onclick="tapKey(1)">1</button>
+            <button class="key-btn" onclick="tapKey(2)">2</button>
+            <button class="key-btn" onclick="tapKey(3)">3</button>
+            <button class="key-btn" onclick="tapKey(4)">4</button>
+            <button class="key-btn" onclick="tapKey(5)">5</button>
+            <button class="key-btn" onclick="tapKey(6)">6</button>
+            <button class="key-btn" onclick="tapKey(7)">7</button>
+            <button class="key-btn" onclick="tapKey(8)">8</button>
+            <button class="key-btn" onclick="tapKey(9)">9</button>
+            <button class="key-btn" style="background:#ffe3e8;" onclick="tapBackspace()">⌫</button>
+            <button class="key-btn" onclick="tapKey(0)">0</button>
+            <button class="key-btn" style="background:#ffe3e8; font-size: 12px;" onclick="tapReset()">Reset</button>
+        </div>
+    </div>
+
+    <div id="screen-something" class="screen">
+        <div class="svg-container">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="15" y="30" width="70" height="50" rx="6" fill="#ffccd5"/>
+                <path d="M15 30 L50 60 L85 30" stroke="#ff4d6d" stroke-width="4" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+                <path d="M50 45 C50 40, 42 35, 38 40 C34 45, 50 55, 50 55 C50 55, 66 45, 62 40 C58 35, 50 40, 50 45 Z" fill="#ff4d6d"/>
+            </svg>
+        </div>
+        <div class="typing-text-box" id="something-text-type"></div>
+        <button class="action-btn" id="something-next-btn" style="display:none;" onclick="goToBdayTitleScreen()">Next 💖</button>
+    </div>
+
+    <div id="screen-bday-title" class="screen">
+        <div class="svg-container">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="25" y="55" width="50" height="25" rx="5" fill="#ff85a1"/>
+                <rect x="30" y="40" width="40" height="15" rx="4" fill="#ffccd5"/>
+                <line x1="50" y1="40" x2="50" y2="25" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+                <path d="M50 25 C50 20, 53 15, 50 10 C47 15, 50 20, 50 25 Z" fill="#ff4d6d"/>
+            </svg>
+        </div>
+        <div class="typing-text-box" id="bday-title-text-type" style="font-size:24px; color:#ff4d6d; font-weight:900;"></div>
+        <button class="action-btn" id="bday-next-btn" style="display:none;" onclick="goToBalloonsScreen()">Let's Pop! 🎈</button>
+    </div>
+
+    <div id="screen-balloons" class="screen">
+        <div class="svg-container" style="width:120px; height:120px; margin-bottom:10px;">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="55" r="30" fill="#ffffff" stroke="#2d221e" stroke-width="3"/>
+                <circle cx="28" cy="32" r="10" fill="#2d221e"/>
+                <circle cx="72" cy="32" r="10" fill="#2d221e"/>
+                <ellipse cx="38" cy="52" rx="7" ry="9" fill="#2d221e" transform="rotate(-15, 38, 52)"/>
+                <ellipse cx="62" cy="52" rx="7" ry="9" fill="#2d221e" transform="rotate(15, 62, 52)"/>
+                <circle cx="38" cy="50" r="2.5" fill="#ffffff"/>
+                <circle cx="62" cy="50" r="2.5" fill="#ffffff"/>
+                <ellipse cx="50" cy="62" rx="4" ry="2.5" fill="#2d221e"/>
+                <path d="M47 67 Q50 69 53 67" stroke="#2d221e" stroke-width="2" fill="none"/>
+            </svg>
+        </div>
+        
+        <div class="pop-text-display" id="pop-msg">Pop all 4 balloons! 🎈</div>
+
+        <div class="balloons-area">
+            <div class="balloon balloon-1" id="bal-1" onclick="popBalloon('bal-1')"></div>
+            <div class="balloon balloon-2" id="bal-2" onclick="popBalloon('bal-2')"></div>
+            <div class="balloon balloon-3" id="bal-3" onclick="popBalloon('bal-3')"></div>
+            <div class="balloon balloon-4" id="bal-4" onclick="popBalloon('bal-4')"></div>
+        </div>
+
+        <button class="action-btn" id="balloon-next-btn" style="display:none;" onclick="goToCryingCatScreen()">Next 🥺</button>
+    </div>
+
+    <div id="screen-crying-cat" class="screen">
+        <div class="svg-container">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#ffe3e8"/>
+                <ellipse cx="50" cy="58" rx="30" ry="24" fill="#fcf8f2"/>
+                <path d="M25 40 C15 35, 26 20, 32 30 Z" fill="#fcf8f2"/>
+                <path d="M75 40 C85 35, 74 20, 68 30 Z" fill="#fcf8f2"/>
+                <path d="M38 55 L38 75" stroke="#a2d2ff" stroke-width="3" stroke-linecap="round"/>
+                <path d="M62 55 L62 75" stroke="#a2d2ff" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="38" cy="52" r="4.5" fill="#2d221e"/>
+                <circle cx="62" cy="52" r="4.5" fill="#2d221e"/>
+                <circle cx="37" cy="50" r="1" fill="#fff"/>
+                <circle cx="61" cy="50" r="1" fill="#fff"/>
+                <circle cx="50" cy="62" r="5" fill="#ff4d6d"/>
+            </svg>
+        </div>
+        <div class="typing-text-box" id="crying-cat-text" style="font-size:18px;"></div>
+        <button class="action-btn" id="crying-next-btn" style="display:none;" onclick="goToLetterScreen()">Let's Open 💌</button>
+    </div>
+
+    <div id="screen-letter" class="screen">
+        <div class="env-instruction" id="tap-msg" style="animation: bounce 1.5s infinite;">Click on the heart seal to open! 💌</div>
+
+        <div class="envelope-container" id="my-envelope" onclick="openEnvelope()">
+            <div class="wax-seal"></div>
+            <div class="flap"></div>
+            <div class="envelope-wrapper"></div>
+            
+            <div class="letter-card">
+                <div class="letter-content">
+                    <div class="scroll-intro-title">wishes for you agha     ✨</div>
+                    
+                    <div class="wish-display-box">
+                        <p class="wish-text" id="current-wish-text">Loading special wishes for you...</p>
+                    </div>
+
+                    <div class="letter-btn-group">
+                        <button class="letter-nav-btn" id="prev-wish-btn" onclick="prevWish(event)">⬅️ back </button>
+                        <button class="letter-nav-btn" id="next-wish-btn" onclick="nextWish(event)">  ➡️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="action-btn" id="letter-next-btn" style="display:none; position:absolute; bottom:10px;" onclick="goToFinalPhotoScreen()">Next 😍</button>
+    </div>
+
+    <div id="screen-final-photo" class="screen">
+        <div class="title-text" style="color: #ff4d6d; font-size:22px; font-weight:800;">Once again Happy Birthday Pyary Agha</div>
+        
+        <div class="photo-frame">
+            <img src="https://images.weserv.nl/?url=i.imgur.com/p681F0T.jpeg" alt="Agha">
+        </div>
+
+        <div class="poetry-box">
+            <div class="poetry-arabic">ضِحْكَتُكِ السَّاحِرَةِ أَخَذَتْ عُمْرِي</div>
+            <div class="poetry-urdu">تیری دلکش ہنسی کو میری عمر لگے</div>
+        </div>
+
+        <button class="action-btn" onclick="goToEndScreen()">Next 🥺❤️</button>
+    </div>
+
+    <div id="screen-end" class="screen">
+        <div class="end-heading">The End ✨</div>
+        <div class="svg-container">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#ffe3e8"/>
+                <ellipse cx="50" cy="55" rx="28" ry="24" fill="#fcf8f2"/>
+                <ellipse cx="25" cy="70" rx="8" ry="5" fill="#ffb3c6" transform="rotate(-30, 25, 70)"/>
+                <ellipse cx="75" cy="55" rx="6" ry="12" fill="#fcf8f2"/>
+                <circle cx="38" cy="52" r="4" fill="#2d221e"/>
+                <circle cx="62" cy="52" r="4" fill="#2d221e"/>
+                <path d="M46 62 Q50 65 54 62" stroke="#2d221e" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <circle cx="30" cy="60" r="4" fill="#ffb3c1"/>
+                <circle cx="70" cy="60" r="4" fill="#ffb3c1"/>
+            </svg>
+        </div>
+        <div class="potato-text">Bye Bye Mery Potato! </div>
+
+  <div class="regards-text">Regards from Your Sahiba</div>
+
+<script>
+    let codeStr = "";
+    const targetCode = "2442"; 
+    let poppedCount = 0;
+    let flowerInterval;
+
+    // The Beautiful Wishes list
+    const wishes = [
+        ✨ Seeing you win is also part of my dream
+         Allah apko koi gham na Dy siwaye gham e Hussain ع ky
+         Apko Mola Aliع ky rang lagy
+          Is sy Bari or kya hi dua du ky...
+        🕊️ Kabhi bhi Hussainؑ ki Maa, Jannat ki Shahzadi Sayyida Fatima Zahraؑ aapse naraz na hon
+         Apki zindagi mein barkat sukoon aur izzat ho, aur apki aakhirat ka safar Ahlul Baytؑ ki shafaat se roshan ho
+        🤲 Allah tumhari har jaiz dua qabool kare aur tumhein Ahlul Baytؑ ka sachcha khadim banaye
+        👑 Aap ke naseeb mein hamesha Mola Aliؑ ki muhabbat Imam Hussainؑ ki pehchan aur Ahlul Baytؑ ki wafa likhi ho
+        ⏳ Aap ka naam un logon mein likha jaye jo Imam-e-Zamanaؑ ke sachche muntazireen hon
+        🌹 Aap ke liye dua hai ke Allah aap ko itni izzat de jitni Ahlul Baytؑ ke chahne walon ko naseeb hoti hai
+        🖤 Aap ka dil hamesha zikr-e-Hussainؑ se abad rahe aur aap ki aankhon mein kabhi mayoosi na aaye
+    ];
+    let currentWishIndex = 0;
+
+    // Beautiful flower falling effect generator
+    function startFlowerRain() {
+        const container = document.getElementById("flower-container");
+        const flowerIcons = ['🌸', '🌹', '🌷', '🌺', '🍃'];
+        
+        flowerInterval = setInterval(() => {
+            const flower = document.createElement("div");
+            flower.classList.add("flower");
+            flower.innerText = flowerIcons[Math.floor(Math.random() * flowerIcons.length)];
+            flower.style.left = Math.random() * 100 + "vw";
+            flower.style.fontSize = Math.random() * 15 + 15 + "px";
+            flower.style.animationDuration = Math.random() * 3 + 3 + "s";
+            container.appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, 6000);
+        }, 200);
+    }
+
+    function stopFlowerRain() {
+        clearInterval(flowerInterval);
+        document.getElementById("flower-container").innerHTML = "";
+    }
+
+    function typeWriter(elementId, text, speed, callback) {
+        let i = 0;
+        const elem = document.getElementById(elementId);
+        elem.innerText = "";
+        
+        function typing() {
+            if (i < text.length) {
+                elem.innerText += text.charAt(i);
+                i++;
+                setTimeout(typing, speed);
+            } else if (callback) {
+                callback();
+            }
+        }
+        typing();
+    }
+
+    function tapKey(val) {
+        if (codeStr.length < 4) {
+            codeStr += val;
+            drawDots();
+            if (codeStr.length === 4) {
+                setTimeout(checkInput, 300);
+            }
+        }
+    }
+
+    function tapBackspace() {
+        if (codeStr.length > 0) {
+            codeStr = codeStr.slice(0, -1);
+            drawDots();
+        }
+    }
+
+    function tapReset() {
+        codeStr = "";
+        drawDots();
+    }
+
+    function drawDots() {
+        for (let i = 0; i < 4; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            if (i < codeStr.length) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        }
+    }
+
+    function switchScreen(toScreenId) {
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(s => s.classList.remove('active'));
+        
+        const target = document.getElementById(toScreenId);
+        if (target) {
+            target.classList.add('active');
+        }
+    }
+
+    function checkInput() {
+        if (codeStr === targetCode) {
+            goToSomethingScreen();
+        } else {
+            alert("Wrong Passcode! Resetting...");
+            tapReset();
+        }
+    }
+
+    function goToSomethingScreen() {
+        switchScreen("screen-something");
+        document.getElementById("something-next-btn").style.display = "none";
+        typeWriter("something-text-type", "I have something special for you...", 60, () => {
+            document.getElementById("something-next-btn").style.display = "inline-block";
+        });
+    }
+
+    function goToBdayTitleScreen() {
+        switchScreen("screen-bday-title");
+        document.getElementById("bday-next-btn").style.display = "none";
+        typeWriter("bday-title-text-type", "Happy Birthday\nAgha Hanan Haider Najfi", 60, () => {
+            document.getElementById("bday-next-btn").style.display = "inline-block";
+        });
+    }
+
+    function goToBalloonsScreen() {
+        switchScreen("screen-balloons");
+        poppedCount = 0;
+        document.getElementById("balloon-next-btn").style.display = "none";
+        document.getElementById("pop-msg").innerText = "Pop all 4 balloons! 🎈";
+        document.getElementById("pop-msg").classList.remove("active");
+        
+        for (let i = 1; i <= 4; i++) {
+            const b = document.getElementById(`bal-${i}`);
+            b.classList.remove("popped");
+        }
+    }
+
+    function popBalloon(id) {
+        const balloon = document.getElementById(id);
+        if (!balloon.classList.contains("popped")) {
+            balloon.classList.add("popped");
+            poppedCount++;
+            
+            if (poppedCount === 4) {
+                const msg = document.getElementById("pop-msg");
+                msg.innerText = "You are so cute! ❤️";
+                msg.classList.add("active");
+                document.getElementById("balloon-next-btn").style.display = "inline-block";
+            }
+        }
+    }
+
+    function goToCryingCatScreen() {
+        switchScreen("screen-crying-cat");
+        document.getElementById("crying-next-btn").style.display = "none";
+        typeWriter("crying-cat-text", "Wait... I think I forgot something...\n\nOhh, a letter for you! 🥺💌", 55, () => {
+            document.getElementById("crying-next-btn").style.display = "inline-block";
+        });
+    }
+
+    function goToLetterScreen() {
+        switchScreen("screen-letter");
+        startFlowerRain(); 
+        currentWishIndex = 0;
+        updateWishDisplay();
+    }
+
+    function openEnvelope() {
+        const env = document.getElementById("my-envelope");
+        const inst = document.getElementById("tap-msg");
+        if (!env.classList.contains("opened")) {
+            env.classList.add("opened");
+            inst.innerText = "Here is your letter! 💌";
+            inst.style.animation = "none";
+            document.getElementById("letter-next-btn").style.display = "inline-block";
+        }
+    }
+
+    function updateWishDisplay() {
+        const wishText = document.getElementById("current-wish-text");
+        wishText.style.animation = 'none';
+        wishText.offsetHeight; /* trigger reflow */
+        wishText.style.animation = 'fadeInWish 0.5s ease-in-out';
+        
+        wishText.innerText = wishes[currentWishIndex];
+
+        // Hide/Show navigation buttons dynamically
+        document.getElementById("prev-wish-btn").style.visibility = (currentWishIndex === 0) ? "hidden" : "visible";
+        document.getElementById("next-wish-btn").innerText = (currentWishIndex === wishes.length - 1) ? "ab sari duayein bta du hehe
+✨" : " next ➡️";
+    }
+
+    function nextWish(event) {
+        event.stopPropagation(); // prevent envelope container click trigger
+        if (currentWishIndex < wishes.length - 1) {
+            currentWishIndex++;
+            updateWishDisplay();
+        } else {
+            // If they read all wishes, show a sweet alert to click "Next"
+            alert("Aapne saari duayein parh leen! Ab niche 'Next' par click karein  AGHA SAHIB  ❤️");
+        }
+    }
+
+    function prevWish(event) {
+        event.stopPropagation(); 
+        if (currentWishIndex > 0) {
+            currentWishIndex--;
+            updateWishDisplay();
+        }
+    }
+
+    function goToFinalPhotoScreen() {
+        stopFlowerRain(); 
+        switchScreen("screen-final-photo");
+    }
+
+    function goToEndScreen() {
+        switchScreen("screen-end");
+    }
+</script>
+
+</body>
+</html>
